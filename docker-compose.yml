@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - ethereum_data:/root/.ethereum
+    depends_on:
+      - db
+      - geth
+    command: ["./AltTreasury", "-conf", "/data/conf"]
+    environment:
+      - ACCOUNT_PASSWORD=12345678
+      - CHAIN_ID=1337
+      - MYSQL_DSN=alt_treasury_admin:alt_treasury@tcp(db:3306)/alt_treasury?parseTime=True&loc=Local
+      - ETHEREUM_RPC_URL=http://geth:8545
+      - KEYSTORE_FILE_PATH=/root/.ethereum/keystore/UTC--2024-10-08T04-35-47.746270463Z--207410db6ceeb50fff82e306ba1459e537b6b8b7
+      - TREASURY_ADDRESS=0x207410db6ceeb50fff82e306ba1459e537b6b8b7
+      - TOKEN_ADDRESS=0x63A98e41157dfc2F6DC15f64460C710AE608935F
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: alt_treasury
+      MYSQL_USER: alt_treasury_admin
+      MYSQL_PASSWORD: alt_treasury
+      MYSQL_ROOT_PASSWORD: alt_treasury
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  geth:
+    image: ethereum/client-go:latest
+    ports:
+      - "8545:8545"  # RPC
+      - "8546:8546"  # WebSocket
+      - "30303:30303"  # P2P
+    volumes:
+      - ethereum_data:/root/.ethereum
+    command:
+      - --dev
+      - --http
+      - --http.addr=0.0.0.0
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --http.api=eth,net,web3,personal,miner,admin,debug
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.origins=*
+      - --nodiscover
+      - --maxpeers=0
+      - --mine
+      - --networkid=1337
+      # - --allow-insecure-unlock
+      # - --unlock=0
+      - --datadir=/root/.ethereum
+
+volumes:
+  mysql_data:
+  ethereum_data:

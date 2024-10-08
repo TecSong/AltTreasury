@@ -1,0 +1,359 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /helloworld/{name}:
+        get:
+            tags:
+                - Greeter
+            description: Sends a greeting
+            operationId: Greeter_SayHello
+            parameters:
+                - name: name
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+    /v1/withdrawals/claim:
+        post:
+            tags:
+                - Treasury
+            operationId: Treasury_CreateWithdrawClaim
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/treasury.v1.CreateWithdrawClaimRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/treasury.v1.CreateWithdrawClaimReply'
+    /v1/withdrawals/claims:
+        get:
+            tags:
+                - Treasury
+            operationId: Treasury_ListWithdrawClaims
+            parameters:
+                - name: staffId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+                - name: createdAfter.seconds
+                  in: query
+                  description: Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+                  schema:
+                    type: integer
+                    format: int64
+                - name: createdAfter.nanos
+                  in: query
+                  description: Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: createdBefore.seconds
+                  in: query
+                  description: Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z inclusive.
+                  schema:
+                    type: integer
+                    format: int64
+                - name: createdBefore.nanos
+                  in: query
+                  description: Non-negative fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values that count forward in time. Must be from 0 to 999,999,999 inclusive.
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/treasury.v1.ListWithdrawClaimsReply'
+    /v1/withdrawals/claims/confirmations:
+        get:
+            tags:
+                - Treasury
+            operationId: Treasury_ListWithdrawClaimConfirmations
+            parameters:
+                - name: staffId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: managerId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: actionType
+                  in: query
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/treasury.v1.ListWithdrawClaimConfirmationsReply'
+    /v1/withdrawals/claims/{claimId}:
+        get:
+            tags:
+                - Treasury
+            operationId: Treasury_GetWithdrawClaim
+            parameters:
+                - name: claimId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/treasury.v1.GetWithdrawClaimReply'
+    /v1/withdrawals/claims/{claimId}/approve:
+        post:
+            tags:
+                - Treasury
+            operationId: Treasury_ApproveWithdrawClaim
+            parameters:
+                - name: claimId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/treasury.v1.ApproveWithdrawClaimRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/treasury.v1.ApproveWithdrawClaimReply'
+    /v1/withdrawals/claims/{claimId}/reject:
+        post:
+            tags:
+                - Treasury
+            operationId: Treasury_RejectWithdrawClaim
+            parameters:
+                - name: claimId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/treasury.v1.RejectWithdrawClaimRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/treasury.v1.RejectWithdrawClaimReply'
+components:
+    schemas:
+        helloworld.v1.HelloReply:
+            type: object
+            properties:
+                message:
+                    type: string
+            description: The response message containing the greetings
+        treasury.v1.ApproveWithdrawClaimReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+        treasury.v1.ApproveWithdrawClaimRequest:
+            type: object
+            properties:
+                claimId:
+                    type: integer
+                    format: int64
+                managerId:
+                    type: integer
+                    format: int64
+        treasury.v1.CreateWithdrawClaimReply:
+            type: object
+            properties:
+                claimId:
+                    type: integer
+                    format: int64
+        treasury.v1.CreateWithdrawClaimRequest:
+            type: object
+            properties:
+                staffId:
+                    type: integer
+                    format: int64
+                amount:
+                    type: number
+                    format: double
+                recipientAddress:
+                    type: string
+        treasury.v1.GetWithdrawClaimReply:
+            type: object
+            properties:
+                claimId:
+                    type: integer
+                    format: int64
+                staffId:
+                    type: integer
+                    format: int64
+                amount:
+                    type: number
+                    format: double
+                tokenAddress:
+                    type: string
+                recipientAddress:
+                    type: string
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        treasury.v1.ListWithdrawClaimConfirmationsReply:
+            type: object
+            properties:
+                confirmations:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/treasury.v1.WithdrawClaimConfirmationInfo'
+                total:
+                    type: integer
+                    format: int32
+        treasury.v1.ListWithdrawClaimsReply:
+            type: object
+            properties:
+                claims:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/treasury.v1.WithdrawClaimInfo'
+                total:
+                    type: integer
+                    format: int32
+                page:
+                    type: integer
+                    format: int32
+                pageSize:
+                    type: integer
+                    format: int32
+        treasury.v1.RejectWithdrawClaimReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+        treasury.v1.RejectWithdrawClaimRequest:
+            type: object
+            properties:
+                claimId:
+                    type: integer
+                    format: int64
+                managerId:
+                    type: integer
+                    format: int64
+        treasury.v1.WithdrawClaimConfirmationInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                withdrawClaimId:
+                    type: integer
+                    format: int64
+                managerId:
+                    type: integer
+                    format: int64
+                actionType:
+                    type: string
+                confirmedAt:
+                    type: string
+                    format: date-time
+        treasury.v1.WithdrawClaimInfo:
+            type: object
+            properties:
+                claimId:
+                    type: integer
+                    format: int64
+                staffId:
+                    type: integer
+                    format: int64
+                amount:
+                    type: number
+                    format: double
+                tokenAddress:
+                    type: string
+                recipientAddress:
+                    type: string
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+tags:
+    - name: Greeter
+      description: The greeting service definition.
+    - name: Treasury

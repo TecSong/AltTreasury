@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package treasury.v1;
+
+option go_package = "AltTreasury/api/treasury/v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+service Treasury {
+  rpc CreateWithdrawClaim(CreateWithdrawClaimRequest) returns (CreateWithdrawClaimReply) {
+    option (google.api.http) = {
+      post: "/v1/withdrawals/claim"
+      body: "*"
+    };
+  }
+
+  rpc ListWithdrawClaims(ListWithdrawClaimsRequest) returns (ListWithdrawClaimsReply) {
+    option (google.api.http) = {
+      get: "/v1/withdrawals/claims"
+    };
+  }
+
+  rpc GetWithdrawClaim(GetWithdrawClaimRequest) returns (GetWithdrawClaimReply) {
+    option (google.api.http) = {
+      get: "/v1/withdrawals/claims/{claim_id}"
+    };
+  }
+  
+  rpc ApproveWithdrawClaim(ApproveWithdrawClaimRequest) returns (ApproveWithdrawClaimReply) {
+    option (google.api.http) = {
+      post: "/v1/withdrawals/claims/{claim_id}/approve"
+      body: "*"
+    };
+  }
+  
+  rpc RejectWithdrawClaim(RejectWithdrawClaimRequest) returns (RejectWithdrawClaimReply) {
+    option (google.api.http) = {
+      post: "/v1/withdrawals/claims/{claim_id}/reject"
+      body: "*"
+    };
+  }
+  
+  rpc ListWithdrawClaimConfirmations(ListWithdrawClaimConfirmationsRequest) returns (ListWithdrawClaimConfirmationsReply) {
+    option (google.api.http) = {
+      get: "/v1/withdrawals/claims/confirmations"
+    };
+  }
+  
+}
+
+message CreateWithdrawClaimRequest {
+  int64 staff_id = 1;
+  double amount = 2;
+  string recipient_address = 3;
+}
+
+message CreateWithdrawClaimReply {
+  int64 claim_id = 1;
+}
+
+message GetWithdrawClaimRequest {
+  int64 claim_id = 1;
+}
+
+message GetWithdrawClaimReply {
+  int64 claim_id = 1;
+  int64 staff_id = 2;
+  double amount = 3;
+  string token_address = 4;
+  string recipient_address = 5;
+  string status = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message ApproveWithdrawClaimRequest {
+  int64 claim_id = 1;
+  int64 manager_id = 2;
+}
+
+message ApproveWithdrawClaimReply {
+  bool success = 1;
+  string message = 2;
+}
+
+message RejectWithdrawClaimRequest {
+  int64 claim_id = 1;
+  int64 manager_id = 2;
+}
+
+message RejectWithdrawClaimReply {
+  bool success = 1;
+  string message = 2;
+}
+
+// 添加新的请求和响应消息
+message ListWithdrawClaimConfirmationsRequest {
+  optional int64 staff_id = 1;
+  optional int64 manager_id = 2;
+  optional string action_type = 3;
+  int32 page = 4;
+  int32 page_size = 5;
+}
+
+message WithdrawClaimConfirmationInfo {
+  int64 id = 1;
+  int64 withdraw_claim_id = 2;
+  int64 manager_id = 3;
+  string action_type = 4;
+  google.protobuf.Timestamp confirmed_at = 5;
+}
+
+message ListWithdrawClaimConfirmationsReply {
+  repeated WithdrawClaimConfirmationInfo confirmations = 1;
+  int32 total = 2;
+}
+
+// 添加新的请求和响应消息
+message ListWithdrawClaimsRequest {
+  optional int64 staff_id = 1;
+  optional string status = 2;
+  optional google.protobuf.Timestamp created_after = 3;
+  optional google.protobuf.Timestamp created_before = 4;
+  int32 page = 5;
+  int32 page_size = 6;
+}
+
+message ListWithdrawClaimsReply {
+  repeated WithdrawClaimInfo claims = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message WithdrawClaimInfo {
+  int64 claim_id = 1;
+  int64 staff_id = 2;
+  double amount = 3;
+  string token_address = 4;
+  string recipient_address = 5;
+  string status = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}

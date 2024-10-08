@@ -1,0 +1,19 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 30s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 5s
+data:
+  database:
+    driver: mysql
+    source: alt_treasury_admin:alt_treasury@tcp(db:3306)/alt_treasury?parseTime=True&loc=Local
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+pagination:
+  default_page: 1
+  default_page_size: 10
+  max_page_size: 100
